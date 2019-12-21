@@ -1,5 +1,5 @@
 import React from 'react';
-export default function Button({ onClick, text, start, disabled }) {
+export default function Button({ onClick, text, start, disabled, length = 1 }) {
   return (
     <button
       style={{
@@ -16,7 +16,7 @@ export default function Button({ onClick, text, start, disabled }) {
         fontSize: 15,
         padding: '0 10px',
         marginRight: 20,
-        width: 90,
+        width: 90 * length,
         marginBottom: 6
       }}
       disabled={disabled}

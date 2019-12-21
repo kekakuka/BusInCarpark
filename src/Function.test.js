@@ -12,8 +12,8 @@ test('getFaceString function', () => {
   expect(getFaceString(1)).toBe('EAST');
   expect(getFaceString(2)).toBe('SOUTH');
   expect(getFaceString(3)).toBe('WEST');
-  expect(getFaceString(null)).toBe('Wrong Face');
-  expect(getFaceString('1')).toBe('Wrong Face');
+  expect(getFaceString(null)).toBe('Wrong');
+  expect(getFaceString('1')).toBe('Wrong');
 });
 
 test('isValidPlace function', () => {
@@ -50,6 +50,7 @@ test('isValidCommand  function', () => {
 test('convertCommandToString function ', () => {
   expect(convertCommandToString(['move'])).toBe('Move');
   expect(convertCommandToString('plac')).toBe('P');
-  expect(convertCommandToString(['place'])).toBe('Place X: undefined Y: undefined F: Wrong Face');
+  expect(convertCommandToString(['place'])).toBe('Place X: Wrong Y: Wrong F: Wrong');
   expect(convertCommandToString(['place', 1, 3, 2])).toBe('Place X: 1 Y: 3 F: SOUTH');
+  expect(convertCommandToString(['report', 1, 3, 2])).toBe('Report');
 });

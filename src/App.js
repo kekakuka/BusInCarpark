@@ -14,7 +14,7 @@ import bus from './busClass';
 //config values
 import { unitTime, optionsXandY, optionsF, optionsSpeed } from './utils/constValues';
 //util function
-import { delByIndex } from './utils/utilFunctions';
+import { delByIndex, createRandomTask } from './utils/utilFunctions';
 
 export default function App() {
   const [position, setPosition] = useState(bus.getPosition());
@@ -24,7 +24,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [commandResultArraY, setCommandResultArray] = useState([]);
 
-  const speed = useSelect(2);
+  const speed = useSelect(1);
   const x = useSelect(0);
   const y = useSelect(0);
   const f = useSelect(0);
@@ -39,7 +39,7 @@ export default function App() {
   //loading before start clear reports
   //canncal loading and clear command after start
   function startMove() {
-    console.log('Action: ');
+    console.log('Start Action: ');
     setLoading(true);
     setReportInfo([]);
     //each command from the User Interface must be in the valid format, but it action may be invalid.
@@ -54,6 +54,7 @@ export default function App() {
       setHighlight(-1);
     }, unitTime * commandArray.length * speed.value + 1);
   }
+
   //remove the command by click it
   function removeCommand(index) {
     setCommandArray(delByIndex(commandArray, index));
@@ -73,6 +74,22 @@ export default function App() {
       setCommandResultArray([]);
     }
     setCommandArray(commandArray => [...commandArray, payload]);
+  }
+
+  function createRandomTasks() {
+    if (position.x !== undefined) {
+      setPosition(bus.getPosition());
+      setCommandResultArray([]);
+    }
+    setCommandArray(commandArray => [
+      ...commandArray,
+      createRandomTask(reportMethod),
+      createRandomTask(reportMethod),
+      createRandomTask(reportMethod),
+      createRandomTask(reportMethod),
+      createRandomTask(reportMethod),
+      createRandomTask(reportMethod)
+    ]);
   }
 
   return (
@@ -120,6 +137,7 @@ export default function App() {
               putCommand(['report', reportMethod]);
             }}
           />
+          <Button disabled={loading} text={'Add random tasks'} length={2} onClick={createRandomTasks} />
           <br />
           <div style={{ display: 'flex' }}>
             <Button text={'Start'} onClick={startMove} start disabled={loading || commandArray.length === 0} />

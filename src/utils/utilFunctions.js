@@ -12,7 +12,7 @@ export function getFaceString(f) {
     case 3:
       return 'WEST';
     default:
-      return 'Wrong Face';
+      return 'Wrong';
   }
 }
 
@@ -34,12 +34,18 @@ export function isValidCommand(commandString) {
   return validCommands.includes(commandString);
 }
 
+function convertPositionString(p) {
+  return validXandY.includes(p) ? p : 'Wrong';
+}
+
 //ConvertCommandToString Only use in user interface.
 export function convertCommandToString(command) {
   try {
     switch (command[0]) {
       case 'place':
-        return `Place X: ${command[1]} Y: ${command[2]} F: ${getFaceString(command[3])}`;
+        return `Place X: ${convertPositionString(command[1])} Y: ${convertPositionString(
+          command[2]
+        )} F: ${getFaceString(command[3])}`;
       default:
         return command[0].replace(/^\S/, s => s.toUpperCase());
     }
@@ -58,4 +64,25 @@ export function delByIndex(arr, index) {
   }
 
   return [...arr.slice(0, index), ...arr.slice(Number(index) + 1)];
+}
+
+//create random task for testing the bus in User Interface
+export function createRandomTask(f) {
+  switch (Math.floor(Math.random() * 5)) {
+    case 0:
+      return ['right'];
+    case 1:
+      return ['left'];
+    case 2:
+      return ['move'];
+    case 3:
+      return ['report', f];
+    default:
+      return [
+        'place',
+        Math.floor(Math.random() * 5.3),
+        Math.floor(Math.random() * 5.3),
+        Math.floor(Math.random() * 4.3)
+      ];
+  }
 }
