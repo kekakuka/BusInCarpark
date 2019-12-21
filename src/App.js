@@ -1,119 +1,138 @@
+//libraries
 import React, { useState } from 'react';
-import useBusHooks from './customHooks/useBusHooks';
+//componets
+import Container from './components/Container';
+import ParkingAndBus from './components/ParkingAndBus';
+import Button from './components/Button';
+import Select from './components/Select';
+import TaskSheet from './components/TaskSheet';
+import Report from './components/Report';
+//custom hooks
 import useSelect from './customHooks/useSelect';
-function App() {
-  const { bus, position } = useBusHooks();
+//bus instance
+import bus from './busClass';
+//config values
+import { unitTime, optionsXandY, optionsF, optionsSpeed } from './utils/constValues';
+//util function
+import { delByIndex } from './utils/utilFunctions';
+
+export default function App() {
+  const [position, setPosition] = useState(bus.getPosition());
+  const [highlight, setHighlight] = useState(-1);
   const [commandArray, setCommandArray] = useState([]);
-  const [reportInfo, setReportInfo] = useState('');
+  const [reportInfo, setReportInfo] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [commandResultArraY, setCommandResultArray] = useState([]);
+
+  const speed = useSelect(2);
   const x = useSelect(0);
   const y = useSelect(0);
   const f = useSelect(0);
 
-  function startMove(bus, commandArray) {
-    commandArray.map((i, index) => {
-      setTimeout(() => {
-        Array.isArray(i) ? bus(...i) : bus(i);
-      }, 500 * index);
-    });
-    setCommandArray([]);
+  //after each command ,highlight current command, set the Result, show the new bus position,
+  function afterCallback(index, isValid, command) {
+    setCommandResultArray(commandResultArraY => [...commandResultArraY, { command, isValid }]);
+    setHighlight(index);
+    setPosition(bus.getPosition());
+  }
+
+  //loading before start clear reports
+  //canncal loading and clear command after start
+  function startMove() {
+    console.log('Action: ');
+    setLoading(true);
+    setReportInfo([]);
+    //each command from the User Interface must be in the valid format, but it action may be invalid.
+    bus.takeTaskSheet(commandArray, speed.value, afterCallback);
+    setTimeout(() => {
+      setLoading(false);
+      setCommandArray([]);
+      setHighlight(-1);
+    }, unitTime * commandArray.length * speed.value + 1);
+  }
+
+  //remove the command by click it
+  function removeCommand(index) {
+    setCommandArray(delByIndex(commandArray, index));
+  }
+
+  //create the report list and logo it
+  function reportMethod(info) {
+    setReportInfo(reportInfo => [...reportInfo, info]);
+    console.log(info);
+  }
+
+  //create tasksheet
+  function putCommand(payload) {
+    //actually not in the park! Just for better looking after start
+    if (position.x !== undefined) {
+      setPosition(bus.getPosition());
+      setCommandResultArray([]);
+    }
+    setCommandArray(commandArray => [...commandArray, payload]);
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ width: 500, height: 500, background: '#eee', position: 'relative' }}>
-        <div
-          style={{
-            width: 100,
-            height: 100,
-            position: 'absolute',
-            background: 'linear-gradient(0deg,rgba(80,115,115, 0.25) 30%, rgba(90,35,35, 0.25) 95%)',
-            left: position.x * 100,
-            bottom: position.y * 100,
-            textAlign: 'center',
-            transform: `rotate(${position.f * 90}deg)`
-          }}
-        >
-          Head
+    <Container>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <ParkingAndBus position={position} />
+        <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex' }}>
+            <Button
+              disabled={loading}
+              text={'Place'}
+              onClick={() => {
+                putCommand(['place', x.value, y.value, f.value]);
+              }}
+            />
+            <Select selectLabel={'X: '} selectHook={x} options={optionsXandY} />
+            <Select selectLabel={'Y: '} selectHook={y} options={optionsXandY} />
+            <Select selectLabel={'F: '} selectHook={f} options={optionsF} length={2} />
+          </div>
+          <Button
+            disabled={loading}
+            text={'Left'}
+            onClick={() => {
+              putCommand(['left']);
+            }}
+          />
+          <Button
+            disabled={loading}
+            text={'Right'}
+            onClick={() => {
+              putCommand(['right']);
+            }}
+          />
+          <Button
+            disabled={loading}
+            text={'Move'}
+            onClick={() => {
+              putCommand(['move']);
+            }}
+          />
+          <Button
+            disabled={loading}
+            text={'Report'}
+            onClick={() => {
+              putCommand(['report', reportMethod]);
+            }}
+          />
           <br />
-          {reportInfo}
+          <div style={{ display: 'flex' }}>
+            <Button text={'Start'} onClick={startMove} start disabled={loading || commandArray.length === 0} />
+            <Select selectLabel={'Play Speed: '} selectHook={speed} options={optionsSpeed} length={2} />
+          </div>
+          <br />
         </div>
       </div>
-      <div>
-        <span>X</span>
-        <select {...x}>
-          <option value={0}>0</option>
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-        </select>
-        <span>Y</span>
-        <select {...y}>
-          <option value={0}>0</option>
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-        </select>
-        <span>Face</span>
-        <select {...f}>
-          <option value={0}>North</option>
-          <option value={1}>East</option>
-          <option value={2}>South</option>
-          <option value={3}>West</option>
-        </select>
-        <button
-          onClick={() => {
-            setCommandArray(commandArray => [...commandArray, ['place', x.value, y.value, f.value]]);
-          }}
-        >
-          Place Command
-        </button>
-        <button
-          onClick={() => {
-            commandArray.length > 0 && setCommandArray(commandArray => [...commandArray, ['left']]);
-          }}
-        >
-          Left Command
-        </button>
-        <button
-          onClick={() => {
-            commandArray.length > 0 && setCommandArray(commandArray => [...commandArray, ['right']]);
-          }}
-        >
-          Right Command
-        </button>
-        <button
-          onClick={() => {
-            commandArray.length > 0 && setCommandArray(commandArray => [...commandArray, ['move']]);
-          }}
-        >
-          Move Command
-        </button>
-        <button
-          onClick={() => {
-            commandArray.length > 0 && setCommandArray(commandArray => [...commandArray, ['report', setReportInfo]]);
-          }}
-        >
-          Report Command
-        </button>
-        <br />
-        <button
-          onClick={() => {
-            startMove(bus, commandArray);
-          }}
-        >
-          Start
-        </button>
-        <br />
-        <div>
-          {commandArray.map((item, index) => (
-            <span key={index}>{JSON.stringify(item)}</span>
-          ))}
-        </div>
-      </div>
-    </div>
+      <TaskSheet
+        commandArray={commandArray}
+        commandResultArraY={commandResultArraY}
+        highlight={highlight}
+        removeCommand={removeCommand}
+        loading={loading}
+      />
+      <Report reportInfo={reportInfo} />
+    </Container>
   );
 }
-
-export default App;
