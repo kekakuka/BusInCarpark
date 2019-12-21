@@ -36,15 +36,26 @@ export function isValidCommand(commandString) {
 
 //ConvertCommandToString Only use in user interface.
 export function convertCommandToString(command) {
-  switch (command[0]) {
-    case 'place':
-      return `Place X: ${command[1]} Y: ${command[2]} F: ${getFaceString(command[3])}`;
-    default:
-      return command[0].replace(/^\S/, s => s.toUpperCase());
+  try {
+    switch (command[0]) {
+      case 'place':
+        return `Place X: ${command[1]} Y: ${command[2]} F: ${getFaceString(command[3])}`;
+      default:
+        return command[0].replace(/^\S/, s => s.toUpperCase());
+    }
+  } catch (err) {
+    return 'Wrong command';
   }
 }
 
 //delete one item from array by index
 export function delByIndex(arr, index) {
-  return [...arr.slice(0, index), ...arr.slice(index + 1)];
+  if (!Array.isArray(arr)) {
+    return [];
+  }
+  if ((!index && index !== 0) || isNaN(index)) {
+    return [];
+  }
+
+  return [...arr.slice(0, index), ...arr.slice(Number(index) + 1)];
 }

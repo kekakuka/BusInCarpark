@@ -95,7 +95,8 @@ export default (function busRobot() {
   }
 
   //take an array of command
-  function takeTaskSheet(commandArray, speed = 0, callback) {
+  //invoke function use timeout for better user experience
+  function takeTaskSheet(commandArray, callback, speed = 0) {
     //remove invalid command
     const validCommandArray = createValidCommandArray(commandArray);
     validCommandArray.forEach((command, index) => {
@@ -111,7 +112,21 @@ export default (function busRobot() {
     setTimeout(resetBus, unitTime * validCommandArray.length * speed + 1);
   }
 
-  return { getPosition, takeTaskSheet };
+  //take an array of command
+  //invoke function without timeout
+  function takeTaskSheetSync(commandArray, callback) {
+    //remove invalid command
+    const validCommandArray = createValidCommandArray(commandArray);
+    validCommandArray.forEach((command, index) => {
+      const [commandString, ...restParams] = command;
+      const isValid = bus[commandString](...restParams);
+      //run callback after move for tracking the bus position and task
+      callback && typeof callback === 'function' && callback(index, isValid, command);
+    });
+    resetBus();
+  }
+
+  return { getPosition, takeTaskSheet, takeTaskSheetSync };
 })();
 
 // class Bus {

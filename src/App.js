@@ -43,14 +43,17 @@ export default function App() {
     setLoading(true);
     setReportInfo([]);
     //each command from the User Interface must be in the valid format, but it action may be invalid.
-    bus.takeTaskSheet(commandArray, speed.value, afterCallback);
+    if (speed.value === 0) {
+      bus.takeTaskSheetSync(commandArray, afterCallback);
+    } else {
+      bus.takeTaskSheet(commandArray, afterCallback, speed.value);
+    }
     setTimeout(() => {
       setLoading(false);
       setCommandArray([]);
       setHighlight(-1);
     }, unitTime * commandArray.length * speed.value + 1);
   }
-
   //remove the command by click it
   function removeCommand(index) {
     setCommandArray(delByIndex(commandArray, index));

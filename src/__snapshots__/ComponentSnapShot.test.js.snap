@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button renders correctly 1`] = `
+<button
+  onClick={[Function]}
+  style={
+    Object {
+      "background": "linear-gradient(45deg,rgba(40,30,40, 0.9) 30%, rgba(80,72,109, 0.9) 90%)",
+      "border": 0,
+      "borderRadius": 3,
+      "boxShadow": "1px 2px 2px 2px rgba(155, 155, 155, .5)",
+      "color": "#eee",
+      "fontSize": 15,
+      "height": 30,
+      "marginBottom": 6,
+      "marginRight": 20,
+      "padding": "0 10px",
+      "width": 90,
+    }
+  }
+>
+  A Button
+</button>
+`;
+
+exports[`ParkingAndBus renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "background": "url(Parking.png)",
+      "height": 300,
+      "position": "relative",
+      "width": 300,
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "background": "url(Bus.png)",
+        "bottom": -60,
+        "height": 60,
+        "left": 0,
+        "position": "absolute",
+        "textAlign": "center",
+        "transform": "rotate(0deg)",
+        "width": 60,
+      }
+    }
+  >
+    Out Of Parking
+  </div>
+</div>
+`;
