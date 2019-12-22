@@ -73,7 +73,7 @@ export default (function busRobot() {
     //make sure callback is a report method
     try {
       callback(`${_x},${_y},${getFaceString(_f)}`);
-    } catch {
+    } catch (err) {
       return false;
     }
     return true;
