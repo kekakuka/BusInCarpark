@@ -3,7 +3,7 @@ import OneTask from './OneTask';
 import { convertCommandToString } from '../utils/utilFunctions';
 export default function TaskSheet({ commandArray, commandResultArraY, highlight, removeCommand, loading }) {
   return (
-    <div style={{ marginLeft: 10, width: 300 }}>
+    <div style={{ marginLeft: 10, width: 330 }}>
       {commandArray.length > 0 ? (
         <>
           <span style={{ fontSize: 18, fontWeight: '600' }}>Tasks Sheet:</span>

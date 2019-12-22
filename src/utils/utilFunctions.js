@@ -1,6 +1,6 @@
 import { validCommands, validF, validXandY } from './constValues';
 
-//get useful info from current face
+//get string from current face for user
 export function getFaceString(f) {
   switch (f) {
     case 0:
@@ -56,18 +56,14 @@ export function convertCommandToString(command) {
 
 //delete one item from array by index
 export function delByIndex(arr, index) {
-  if (!Array.isArray(arr)) {
+  if (!Array.isArray(arr) || (!index && index !== 0) || isNaN(index)) {
     return [];
   }
-  if ((!index && index !== 0) || isNaN(index)) {
-    return [];
-  }
-
   return [...arr.slice(0, index), ...arr.slice(Number(index) + 1)];
 }
 
 //create random task for testing the bus in User Interface
-export function createRandomTask(f) {
+function createRandomTask(f) {
   switch (Math.floor(Math.random() * 5)) {
     case 0:
       return ['right'];
@@ -85,4 +81,11 @@ export function createRandomTask(f) {
         Math.floor(Math.random() * 4.3)
       ];
   }
+}
+export function pushRandomTasks(f) {
+  const tasks = [];
+  for (let i = 0; i < 10; i++) {
+    tasks.push(createRandomTask(f));
+  }
+  return tasks;
 }

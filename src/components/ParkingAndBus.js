@@ -1,12 +1,13 @@
 import React from 'react';
-export default function ParkingAndBus({ position: { x = 0, y = -1, f = 0 } }) {
+export default React.memo(function ParkingAndBus({ position: { x = 0, y = -1, f = 0 } }) {
   return (
     <div
       style={{
         width: 300,
         height: 300,
         background: 'url(' + require('../static/images/Parking.png') + ')',
-        position: 'relative'
+        position: 'relative',
+        boxShadow: '4px 4px 10px 3px  rgba(155, 155, 155, .5)'
       }}
     >
       <div
@@ -25,4 +26,4 @@ export default function ParkingAndBus({ position: { x = 0, y = -1, f = 0 } }) {
       </div>
     </div>
   );
-}
+});

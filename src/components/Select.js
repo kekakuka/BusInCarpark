@@ -1,5 +1,5 @@
 import React from 'react';
-export default function Select({ selectLabel, selectHook, options, length = 1 }) {
+export default React.memo(function Select({ selectLabel, selectHook, options, length = 1 }) {
   return (
     <div style={{ borderRadius: 5, display: 'flex', alignItems: 'center' }}>
       <div>{selectLabel}</div>
@@ -15,14 +15,12 @@ export default function Select({ selectLabel, selectHook, options, length = 1 })
         }}
         {...selectHook}
       >
-        {options.map(({ label, value }) => {
-          return (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          );
-        })}
+        {options.map(({ label, value }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
       </select>
     </div>
   );
-}
+});

@@ -7,6 +7,7 @@ import Button from './components/Button';
 import Select from './components/Select';
 import TaskSheet from './components/TaskSheet';
 import Report from './components/Report';
+import Instuction from './components/Instruction';
 //custom hooks
 import useSelect from './customHooks/useSelect';
 //bus instance
@@ -14,7 +15,7 @@ import bus from './busClass';
 //config values
 import { unitTime, optionsXandY, optionsF, optionsSpeed } from './utils/constValues';
 //util function
-import { delByIndex, createRandomTask } from './utils/utilFunctions';
+import { delByIndex, pushRandomTasks } from './utils/utilFunctions';
 
 export default function App() {
   const [position, setPosition] = useState(bus.getPosition());
@@ -81,20 +82,17 @@ export default function App() {
       setPosition(bus.getPosition());
       setCommandResultArray([]);
     }
-    setCommandArray(commandArray => [
-      ...commandArray,
-      createRandomTask(reportMethod),
-      createRandomTask(reportMethod),
-      createRandomTask(reportMethod),
-      createRandomTask(reportMethod),
-      createRandomTask(reportMethod),
-      createRandomTask(reportMethod)
-    ]);
+    setCommandArray(commandArray => [...commandArray, ...pushRandomTasks(reportMethod)]);
   }
 
   return (
     <Container>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div>
+        <Instuction />
+        <br />
+        <Report reportInfo={reportInfo} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 5 }}>
         <ParkingAndBus position={position} />
         <div style={{ marginTop: 64, display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex' }}>
@@ -137,7 +135,7 @@ export default function App() {
               putCommand(['report', reportMethod]);
             }}
           />
-          <Button disabled={loading} text={'Add random tasks'} length={2} onClick={createRandomTasks} />
+          <Button disabled={loading} text={'Random'} onClick={createRandomTasks} />
           <br />
           <div style={{ display: 'flex' }}>
             <Button text={'Start'} onClick={startMove} start disabled={loading || commandArray.length === 0} />
@@ -153,7 +151,6 @@ export default function App() {
         removeCommand={removeCommand}
         loading={loading}
       />
-      <Report reportInfo={reportInfo} />
     </Container>
   );
 }
