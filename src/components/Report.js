@@ -4,7 +4,7 @@ import OneTask from './OneTask';
 export default React.memo(function Report({ reportInfo }) {
   return (
     <div>
-      <span>Reports:</span>
+      <span style={{ fontSize: 18, fontWeight: '600' }}>Reports:</span>
       <br />
       {reportInfo.map((info, index) => (
         <OneTask key={index}>
