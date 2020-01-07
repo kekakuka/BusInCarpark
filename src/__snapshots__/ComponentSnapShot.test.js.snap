@@ -28,6 +28,7 @@ exports[`ParkingAndBus renders correctly 1`] = `
   style={
     Object {
       "background": "url(Parking.png)",
+      "boxShadow": "4px 4px 10px 3px  rgba(155, 155, 155, .5)",
       "height": 300,
       "position": "relative",
       "width": 300,
